@@ -5,15 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { config } from 'process';
 import { join } from 'path';
+import { UsersModule } from './users/users.module';
 import { SummonerModule } from './summoner/summoner.module';
 import { LeagueoflegendsModule } from './leagueoflegends/leagueoflegends.module';
-import { UsersModule } from './users/users.module';
+import { NewsModule } from './news/news.module';
+import { SearchesModule } from './searches/searches.module';
 
 // Autorizar comunicacion porque si no dara error
 process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
       imports:[ConfigModule],
       inject:[ConfigService],
@@ -29,9 +33,11 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
         ssl: true,
       }),
     }),
+    UsersModule,
     SummonerModule,
     LeagueoflegendsModule,
-    UsersModule
+    NewsModule,
+    SearchesModule
   ],
   controllers: [AppController],
   providers: [AppService],

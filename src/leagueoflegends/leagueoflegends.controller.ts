@@ -7,8 +7,8 @@ export class LeagueoflegendsController {
 
     @Get('allChampions')
     findAllChampions(
-        @Query('languageCode') languageCode:string = 'en_US',
-        @Query('patchVersion') patchVersion:string = '14.8.1'
+        @Query('languageCode') languageCode: string = 'en_US',
+        @Query('patchVersion') patchVersion: string = '14.8.1'
     ) {
         return this.leagueoflegendsService.findAllChampions(languageCode, patchVersion);
     }
