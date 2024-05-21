@@ -7,6 +7,7 @@ import { config } from 'process';
 import { join } from 'path';
 import { SummonerModule } from './summoner/summoner.module';
 import { LeagueoflegendsModule } from './leagueoflegends/leagueoflegends.module';
+import { UsersModule } from './users/users.module';
 
 // Autorizar comunicacion porque si no dara error
 process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
@@ -29,7 +30,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
       }),
     }),
     SummonerModule,
-    LeagueoflegendsModule
+    LeagueoflegendsModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],
