@@ -4,21 +4,30 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
+// import { EmailVerification } from 'src/email-verification/entities/email-verification.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectRepository(User) private readonly usersRepository: Repository<User>) { }
+        @InjectRepository(User) private readonly usersRepository: Repository<User>,
+        private readonly emailVerificationService: EmailVerificationService
+    ) { }
 
     async create(createUserDto: CreateUserDto) {
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(createUserDto.password, salt);
+        createUserDto.password = hash;
         createUserDto.role = 'user';
         createUserDto.active = true;
         console.log(createUserDto);
         const user = this.usersRepository.create(createUserDto);
         const res = await this.usersRepository.save(user);
         if (res != null || res != undefined) {
+            await this.emailVerificationService.sendVerificationEmail({ email: createUserDto.email });
             return `{"code": "1", "msg": "OK"}`;
-        }else{
+        } else {
             return `{"code": "0", "msg": "USER_NOT_CREATED"}`;
         }
     }
